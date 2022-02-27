@@ -1,9 +1,9 @@
-const alphabet = "abcdefghijklmnopqrstuvwxyz";
+export const alphabets = "abcdefghijklmnopqrstuvwxyz";
 
 export default class Wordler {
   answer = [];
+  maxAttempts;
   currentAttempt = 1;
-  maxAttempts = 6;
   wordAttempts = [];
   letterAttempts = {};
   status = {
@@ -13,12 +13,17 @@ export default class Wordler {
   };
   grid = [];
 
-  constructor(answer) {
+  constructor(answer, maxAttempts) {
     this.answer = answer.split("");
+    this.maxAttempts = maxAttempts || 6;
   }
 
   process(word) {
-    if (word.length > this.answer.length || /[^a-z]/i.test(word)) {
+    if (
+      word.length > this.answer.length ||
+      word.length < this.answer.length ||
+      /[^a-z]/i.test(word)
+    ) {
       return "Invalid";
     }
 
