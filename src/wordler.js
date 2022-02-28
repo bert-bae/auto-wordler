@@ -27,11 +27,11 @@ export default class Wordler {
       return "Invalid";
     }
 
+    this.wordAttempts.push(word);
     if (word === this.answer.join("")) {
       return "Success";
     }
 
-    this.wordAttempts.push(word);
     if (this.currentAttempt >= this.maxAttempts) {
       return "Failed";
     }

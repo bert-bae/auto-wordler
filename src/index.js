@@ -2,7 +2,7 @@ import readline from "readline";
 import sequelize from "./models/index.js";
 import Wordler from "./wordler.js";
 import * as ManualWordler from "./solvers/manual-wordler/index.js";
-import BruteWordlerSolver from "./solvers/brute-wordler/index.js";
+import RegexWordlerSolver from "./solvers/regex-wordler/index.js";
 
 const rl = readline.createInterface(process.stdin, process.stdout);
 
@@ -29,8 +29,8 @@ try {
   // start(initiate);
   // start((answer) => ManualWordler.initiate(answer, rl));
   start(async (answer) => {
-    const bruteSolver = new BruteWordlerSolver(new Wordler(answer, 10));
-    await bruteSolver.solve();
+    const regexSolver = new RegexWordlerSolver(new Wordler(answer, 6));
+    await regexSolver.solve();
     await exit();
   });
 } catch (error) {
