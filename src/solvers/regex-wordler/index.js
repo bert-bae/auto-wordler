@@ -1,4 +1,5 @@
 import { WordsModel } from "../../models/index.js";
+import { positionStatusEnum, statusEnum } from "../../wordler.js";
 
 export default class RegexWordlerSolver {
   wordler;
@@ -28,8 +29,8 @@ export default class RegexWordlerSolver {
       return false;
     }
 
-    const attempt = this.wordler.process(wordToGuess);
-    if (attempt === "Success") {
+    this.wordler.process(wordToGuess);
+    if (this.wordler.status === statusEnum.solved) {
       console.log(
         `Success. Attempted words were ${this.wordler.wordAttempts.join(
           ", "
@@ -38,14 +39,14 @@ export default class RegexWordlerSolver {
       return true;
     }
 
-    if (attempt === "Failed") {
+    if (this.wordler.status === statusEnum.failed) {
       console.log(
         `Failed. Attempted words were ${this.wordler.wordAttempts.join(", ")}\n`
       );
       return false;
     }
 
-    if (attempt === "Invalid") {
+    if (this.wordler.status === statusEnum.unsolved) {
       return false;
     }
 
@@ -70,6 +71,7 @@ export default class RegexWordlerSolver {
     console.log(
       `Narrowed down list of possible words to ${this.wordList.length}`
     );
+    console.log("----------------------------------");
     return this.wordList[0]?.word;
   }
 
@@ -85,20 +87,20 @@ export default class RegexWordlerSolver {
     ];
     let charRegexList = [null, null, null, null, null];
     Object.values(letterMap).forEach(({ status, position, letter }) => {
-      if (status === this.wordler.status.correct) {
+      if (status === positionStatusEnum.correct) {
         this.addFoundLetter(letter);
         return (charRegexList[position] = letter);
       }
 
-      if (status === this.wordler.status.position) {
+      if (status === positionStatusEnum.position) {
         this.addFoundLetter(letter);
         positionExcludeSet[position].add(letter);
-        return (charRegexList[position] = this.wordler.status.position);
+        return (charRegexList[position] = positionStatusEnum.position);
       }
 
-      if (status === this.wordler.status.none) {
+      if (status === positionStatusEnum.none) {
         excludeSet.add(letter);
-        return (charRegexList[position] = this.wordler.status.none);
+        return (charRegexList[position] = positionStatusEnum.none);
       }
     });
 
@@ -116,8 +118,8 @@ export default class RegexWordlerSolver {
         posExclusionSet[i].size > 0 ? [...posExclusionSet[i]].join("") : "";
       const noneRegex = [...excludeSet].join("");
       if (
-        reg === this.wordler.status.position ||
-        reg === this.wordler.status.none
+        reg === positionStatusEnum.position ||
+        reg === positionStatusEnum.none
       ) {
         return `([^${positionRegex}${noneRegex}])`;
       }
