@@ -7,4 +7,4 @@ services:
     environment:
       POSTGRES_USER: local
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: development
+      POSTGRES_DB: postgres
